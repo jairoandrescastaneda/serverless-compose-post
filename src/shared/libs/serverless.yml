@@ -1,0 +1,28 @@
+service: libs
+frameworkVersion: '3'
+custom:
+  scripts:
+    hooks:
+      'before:package:initialize': python3 scripts/rename_folder_before.py
+      'before:package:finalize': python3 scripts/rename_folder_after.py
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+layers:
+  sharedLibs:
+    path: .
+    compatibleRuntimes:
+      - python3.8
+    compatibleArchitectures:
+      - x86_64
+resources:
+  Outputs:
+    SharedLibsExport:
+        Value:
+          Ref: SharedLibsLambdaLayer
+        Export:
+          Name: SharedLibsLambdaLayer-${opt:stage, 'dev'}
+
+plugins:
+  - serverless-plugin-scripts

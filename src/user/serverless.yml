@@ -1,0 +1,56 @@
+service: mylambdaprojectv2
+
+frameworkVersion: '3'
+
+provider:
+  layers:
+    -${param:my-layer}
+  tracing:
+    apiGateway: true
+    lambda: true
+  deploymentBucket:
+    name: ejemplo-test
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  region: us-east-1
+  environment:
+    API: ${file(./config.${opt:stage, 'dev'}.json):API}
+    TABLE_NAME: ${file(./config.${opt:stage, 'dev'}.json):TABLE_NAME}
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - xray:PutTraceSegments
+            - xray:PutTelemetryRecords
+          Resource: "*"
+
+functions:
+  register:
+    handler: service.register.register
+    timeout: 10
+    events:
+      - http:
+          path: register
+          method: post
+          cors: true
+
+
+package:
+  exclude:
+    - node_modules/**
+    - venv/**
+
+
+plugins:
+  - serverless-deployment-bucket
+  - serverless-python-requirements
+
+
+
+
+
+
+

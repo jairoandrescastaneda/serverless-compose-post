@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@serverless/compose": "^1.0.2"
+  },
+  "dependencies": {
+    "serverless-plugin-scripts": "^1.0.2"
+  }
+}

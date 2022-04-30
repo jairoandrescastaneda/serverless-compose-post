@@ -1,0 +1,10 @@
+services:
+  shared-layer:
+    path: src/shared/libs
+
+  user:
+    path: src/user
+    params:
+      my-layer: ${shared-layer.SharedLibsExport}
+    dependsOn:
+      - shared-layer
